@@ -26,19 +26,21 @@ class FrontendController extends Controller
         $request->validate([
             'code' => 'required|string',
             'language' => 'required|string',
-            'input' => 'nullable|string'
+            'stdin' => 'nullable|string'
         ]);
 
         // Language alias mapping for Piston API
         $aliases = [
             'cpp' => 'c++',
-            'csharp' => 'cs',
+            'csharp' => 'csharp.net',
+            'cs'     => 'csharp.net',
             'js' => 'javascript',
             'node' => 'javascript',
             'ts' => 'typescript',
             'ruby' => 'ruby',
             'go' => 'go',
-            'rust' => 'rust'
+            'rust' => 'rust',
+            'swift' => 'swift'
         ];
 
         $language = $aliases[$request->language] ?? $request->language;
@@ -77,7 +79,7 @@ class FrontendController extends Controller
             'language' => $language,
             'version' => $version,
             'files' => $files,
-            'stdin' => $request->input ?? ''
+            'stdin' => $request->stdin ?? ''
         ]);
 
         $data = $response->json();

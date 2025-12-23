@@ -51,6 +51,12 @@
             border-radius: 6px;
             overflow-y: auto;
         }
+
+        .sidebar a.active {
+            background-color: #0d6efd;
+            border-radius: 0px;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -70,7 +76,7 @@
     <div class="d-flex">
 
         <!--  Sidebar with Font Awesome Icons -->
-        <div class="sidebar d-flex flex-column align-items-center shadow">
+        {{-- <div class="sidebar d-flex flex-column align-items-center shadow">
             <a href="{{ route('frontend.index') }}" title="Home"><i class="fa-solid fa-house"></i></a>
 
             <!-- Language links -->
@@ -102,10 +108,96 @@
 
             <!-- Theme toggle -->
             <a href="#" title="Theme"><i class="fa-solid fa-moon"></i></a>
+        </div> --}}
+
+
+        @php
+            $currentLang = $language ?? '';
+        @endphp
+
+        <div class="sidebar d-flex flex-column align-items-center shadow">
+            <a href="{{ route('frontend.index') }}" class="{{ request()->routeIs('frontend.index') ? 'active' : '' }}"
+                title="Home">
+                <i class="fa-solid fa-house"></i>
+            </a>
+
+            <!-- Language links -->
+            <a href="{{ route('frontend.editor', 'java') }}" class="{{ $currentLang === 'java' ? 'active' : '' }}"
+                title="Java">
+                <i class="fa-brands fa-java"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'python') }}" class="{{ $currentLang === 'python' ? 'active' : '' }}"
+                title="Python">
+                <i class="fa-brands fa-python"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'javascript') }}"
+                class="{{ $currentLang === 'javascript' ? 'active' : '' }}" title="JavaScript">
+                <i class="fa-brands fa-js"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'php') }}" class="{{ $currentLang === 'php' ? 'active' : '' }}"
+                title="PHP">
+                <i class="fa-brands fa-php"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'html') }}" class="{{ $currentLang === 'html' ? 'active' : '' }}"
+                title="HTML">
+                <i class="fa-brands fa-html5"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'c') }}" class="{{ $currentLang === 'c' ? 'active' : '' }}"
+                title="C">
+                <i class="fa-solid fa-c"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'cpp') }}" class="{{ $currentLang === 'cpp' ? 'active' : '' }}" style="text-decoration: none"
+                title="C++">
+                <i class="fa-solid fa-c"></i>++
+            </a>
+
+            <a href="{{ route('frontend.editor', 'csharp') }}" class="{{ $currentLang === 'csharp' ? 'active' : '' }}" style="text-decoration: none"
+                title="C#">
+                <i class="fa-solid fa-c"></i>#
+            </a>
+
+            <a href="{{ route('frontend.editor', 'go') }}" class="{{ $currentLang === 'go' ? 'active' : '' }}"
+                title="Go">
+                <i class="fa-brands fa-golang"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'node') }}" class="{{ $currentLang === 'node' ? 'active' : '' }}"
+                title="Node.js">
+                <i class="fa-brands fa-node"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'typescript') }}"
+                class="{{ $currentLang === 'typescript' ? 'active' : '' }}" title="TypeScript">
+                <i class="fa-solid fa-code"></i>
+            </a>
+
+            {{-- <a href="{{ route('frontend.editor', 'kotlin') }}" class="{{ $currentLang === 'kotlin' ? 'active' : '' }}" title="Kotlin">
+            <i class="fa-solid fa-code"></i>
+            </a> --}}
+
+            <a href="{{ route('frontend.editor', 'swift') }}" class="{{ $currentLang === 'swift' ? 'active' : '' }}"
+                title="Swift">
+                <i class="fa-brands fa-swift"></i>
+            </a>
+
+            <a href="{{ route('frontend.editor', 'dart') }}" class="{{ $currentLang === 'dart' ? 'active' : '' }}"
+                title="Dart">
+                <i class="fa-solid fa-code"></i>
+            </a>
+
+            <!-- Theme toggle -->
+            {{-- <a href="#" id="themeToggle" title="Theme"><i class="fa-solid fa-moon"></i></a> --}}
+
         </div>
 
-        <!-- Main Content -->
 
+        <!-- Main Content -->
 
         <div class="container-fluid vh-100 d-flex flex-column p-3">
             {{-- <h4 class="mb-3 text-center">{{ ucfirst($language) }} Editor</h4> --}}
@@ -119,9 +211,14 @@
                                 <h5 class="fw-bold mb-1">
                                     <i class="fa-solid fa-code me-2"></i> {{ ucfirst($language) }} Editor
                                 </h5>
-                                <button id="runBtn" class="btn btn-primary">
-                                    <i class="fas fa-play me-2"></i> Run Code
-                                </button>
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="#" id="themeToggle" title="Theme" class="btn btn-dark">
+                                        <i class="fa-solid fa-moon"></i>
+                                    </a>
+                                    <button id="runBtn" class="btn btn-primary">
+                                        <i class="fas fa-play me-2"></i> Run Code
+                                    </button>
+                                </div>
                             </div>
                             <textarea id="code" class="flex-grow-1"></textarea>
                         </div>
@@ -130,10 +227,17 @@
 
                 <!-- Output -->
                 <div class="col-md-5 d-flex flex-column h-100">
+
                     <div class="card shadow-sm flex-grow-1 d-flex flex-column">
+
                         <div class="card-body d-flex flex-column p-3 flex-grow-1">
+                            <div class="mb-3 mt-2">
+                                <h5 class="fw-bold mb-3 mt-1"><i class="fas fa-terminal me-2"></i>User Input (stdin)
+                                </h5>
+                                <textarea id="userInput" class="form-control" rows="3" placeholder="Input for your program"></textarea>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold mb-1 mt-1"><i class="fas fa-terminal me-2"></i>Output</h5>
+                                <h5 class="fw-bold mb-1 mt-1"><i class="fa-solid fa-tv me-2"></i></i>Output</h5>
                             </div>
                             <pre id="output" class="flex-grow-1 p-3 rounded">Output will appear here...</pre>
                         </div>
@@ -141,34 +245,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-        {{-- <div class="container-fluid p-4">
-            <h4 class="mb-3">{{ ucfirst($language) }} Editor</h4>
-
-            <div class="row g-3">
-                <!-- Editor -->
-                <div class="col-md-6">
-                    <div class="card shadow-sm p-3">
-                        <h6 class="fw-bold mb-2">Code</h6>
-                        <textarea id="code"></textarea>
-                        <button id="runBtn" class="btn btn-primary mt-3 w-100">
-                            <i class="fas fa-play"></i> Run Code
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Output -->
-                <div class="col-md-6">
-                    <div class="card shadow-sm p-3">
-                        <h6 class="fw-bold mb-2">Output</h6>
-                        <pre id="output">Output will appear here...</pre>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </div>
 
     <!-- Footer -->
@@ -210,6 +286,25 @@
 
 
     <script>
+        var currentTheme = 'dracula'; // default theme
+        var themeIcon = document.querySelector('#themeToggle i');
+
+        document.getElementById('themeToggle').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentTheme === 'dracula') {
+                currentTheme = 'default';
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                currentTheme = 'dracula';
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+
+            editor.setOption('theme', currentTheme);
+        });
+
+
         var language = "{{ $language }}";
 
         const modeMap = {
@@ -221,6 +316,7 @@
             c: 'text/x-c++src',
             cpp: 'text/x-c++src',
             csharp: 'text/x-csharp',
+            dotnet: 'text/x-csharp',
             java: 'text/x-java',
             kotlin: 'text/x-kotlin',
             swift: 'swift',
@@ -231,15 +327,22 @@
             rust: 'rust'
         };
 
-        // var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-        //     mode: modeMap[language] || 'python',
-        //     theme: 'dracula',
-        //     lineNumbers: true,
-        //     tabSize: 4
-        // });
+
+        var userInput = document.getElementById('userInput');
+
+        const noInputLanguages = ['swift', 'javascript', 'javascript', 'typescript', 'node', 'html'];
+
+        if (noInputLanguages.includes(language)) {
+            userInput.value = '';
+            userInput.disabled = true;
+            userInput.placeholder = 'Input not supported for this language';
+        } else {
+            userInput.disabled = false;
+            userInput.placeholder = 'Input for your program (when need)';
+        }
 
         var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-            mode: 'javascript', // or language
+            mode: modeMap[language] || 'python',
             theme: 'dracula',
             lineNumbers: true,
             tabSize: 4,
@@ -249,6 +352,7 @@
 
         document.getElementById('runBtn').addEventListener('click', function() {
             var code = editor.getValue();
+            var input = document.getElementById('userInput').value;
             var output = document.getElementById('output');
             output.innerHTML = "";
 
@@ -256,7 +360,7 @@
             if (language === 'html') {
                 var iframe = document.createElement('iframe');
                 iframe.style.width = "100%";
-                iframe.style.height = "400px";
+                iframe.style.height = "800px";
                 iframe.srcdoc = code;
                 output.appendChild(iframe);
                 return;
@@ -275,7 +379,8 @@
                     },
                     body: JSON.stringify({
                         code: code,
-                        language: language
+                        language: language,
+                        stdin: input
                     })
                 })
                 .then(res => res.json())
