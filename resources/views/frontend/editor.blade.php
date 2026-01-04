@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
@@ -57,10 +58,138 @@
             border-radius: 0px;
             width: 100%;
         }
+
+        body.fullscreen-mode .sidebar {
+            display: none !important;
+        }
+
+        body.fullscreen-mode .container-fluid {
+            width: 100vw !important;
+            margin-left: 0 !important;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        body.fullscreen-mode .CodeMirror body.light-mode {
+            --bg-color: #f5f7fa;
+            --text-color: #000;
+            --card-bg: #fff;
+            --card-text: #000;
+        }
+
+        body.dark-mode {
+            --bg-color: #0c0c0c;
+            --text-color: #fff;
+            --card-bg: #1a1a1a;
+            --card-text: #fff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+        }
+
+        /* Inputs and output use CSS variables now */
+        textarea,
+        pre,
+        input {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+            border: 1px solid #444 !important;
+            border-radius: 6px;
+        }
+
+        /* #output specifically */
+        #output {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+        }
+
+        #userInput {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+        }
+
+
+        /* #shareModal .modal-content {
+            background: linear-gradient(180deg, #0f172a, #020617);
+        }
+
+        #shareModal .form-control::selection {
+            background: #044deb;
+            color: #fff;
+        }
+
+        #shareModal .btn-outline-primary:hover,
+        #shareModal .btn-outline-success:hover,
+        #shareModal .btn-outline-info:hover {
+            transform: scale(1.05);
+        } */
+
+
+        body.dark-mode textarea::placeholder,
+        body.dark-mode pre {
+            color: #a09e9e !important;
+        }
+
+
+        .text-custom-theme {
+            color: #000 !important;
+        }
+
+        body.dark-mode .text-custom-theme {
+            color: #a09e9e !important;
+        }
+
+        .CodeMirror-line {
+            border-color: transparent !important;
+        }
+
+        .min-w-35px {
+            min-width: 35px;
+        }
+
+        .btn-theme {
+            background-color: #212529;
+            color: #fff;
+            border: 1px solid #212529;
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background-color: #343a40;
+            border-color: #343a40;
+            color: #fff;
+        }
+
+        body.dark-mode .btn-theme {
+            background-color: #ffc107;
+            color: #212529;
+            border: 1px solid #ffc107;
+        }
+
+        body.dark-mode .btn-theme:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+            color: #212529;
+        }
+
+        .hw-social {
+            height: 42px !important;
+            width: 42px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 
-<body>
+<body class="dark-mode">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
@@ -152,13 +281,13 @@
                 <i class="fa-solid fa-c"></i>
             </a>
 
-            <a href="{{ route('frontend.editor', 'cpp') }}" class="{{ $currentLang === 'cpp' ? 'active' : '' }}" style="text-decoration: none"
-                title="C++">
+            <a href="{{ route('frontend.editor', 'cpp') }}" class="{{ $currentLang === 'cpp' ? 'active' : '' }}"
+                style="text-decoration: none" title="C++">
                 <i class="fa-solid fa-c"></i>++
             </a>
 
-            <a href="{{ route('frontend.editor', 'csharp') }}" class="{{ $currentLang === 'csharp' ? 'active' : '' }}" style="text-decoration: none"
-                title="C#">
+            <a href="{{ route('frontend.editor', 'csharp') }}" class="{{ $currentLang === 'csharp' ? 'active' : '' }}"
+                style="text-decoration: none" title="C#">
                 <i class="fa-solid fa-c"></i>#
             </a>
 
@@ -199,7 +328,7 @@
 
         <!-- Main Content -->
 
-        <div class="container-fluid vh-100 d-flex flex-column p-3">
+        <div class="container-fluid d-flex flex-column p-3">
             {{-- <h4 class="mb-3 text-center">{{ ucfirst($language) }} Editor</h4> --}}
 
             <div class="row flex-grow-1 g-3 h-100">
@@ -212,15 +341,26 @@
                                     <i class="fa-solid fa-code me-2"></i> {{ ucfirst($language) }} Editor
                                 </h5>
                                 <div class="d-flex align-items-center gap-2">
-                                    <a href="#" id="themeToggle" title="Theme" class="btn btn-dark">
+                                    <button id="fullscreenBtn" class="btn btn-secondary ms-2 btn-sm min-w-35px">
+                                        <i class="fa-solid fa-expand"></i>
+                                    </button>
+
+                                    <a href="#" id="themeToggle" title="Theme"
+                                        class="btn btn-theme btn-sm min-w-35px">
                                         <i class="fa-solid fa-moon"></i>
                                     </a>
-                                    <button id="runBtn" class="btn btn-primary">
+
+                                    <button id="shareBtn" class="btn btn-success btn-sm">
+                                        <i class="fa-solid fa-share-nodes me-1"></i> Share
+                                    </button>
+
+                                    <button id="runBtn" class="btn btn-primary btn-sm">
                                         <i class="fas fa-play me-2"></i> Run Code
                                     </button>
+
                                 </div>
                             </div>
-                            <textarea id="code" class="flex-grow-1"></textarea>
+                            <textarea id="code" class="flex-grow-1 border-none"></textarea>
                         </div>
                     </div>
                 </div>
@@ -229,11 +369,17 @@
                 <div class="col-md-5 d-flex flex-column h-100">
 
                     <div class="card shadow-sm flex-grow-1 d-flex flex-column">
-
                         <div class="card-body d-flex flex-column p-3 flex-grow-1">
-                            <div class="mb-3 mt-2">
-                                <h5 class="fw-bold mb-3 mt-1"><i class="fas fa-terminal me-2"></i>User Input (stdin)
-                                </h5>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="fw-bold mb-0">
+                                        <i class="fas fa-terminal me-2"></i>User Input (stdin)
+                                    </h5>
+
+                                    <button id="clearBtn" class="btn btn-danger btn-sm">
+                                        Clear
+                                    </button>
+                                </div>
                                 <textarea id="userInput" class="form-control" rows="3" placeholder="Input for your program"></textarea>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -247,8 +393,77 @@
         </div>
     </div>
 
+
+
+
+    <!-- Dark Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content shadow-lg rounded-4 bg-dark text-light">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-white">
+                        Share your code
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body pt-2">
+                    <p class="text-secondary small">
+                        Anyone with this link can view & edit the code.
+                    </p>
+
+                    <!-- Share link -->
+                    <div class="input-group mb-3">
+                        <input type="text" id="shareLinkInput"
+                            class="form-control form-control-lg bg-black text-light border-secondary" readonly>
+
+                        <button class="btn btn-primary px-4" id="copyShareLink">
+                            Copy
+                        </button>
+                    </div>
+
+                    <!-- Social buttons -->
+                    <div class="text-center mt-4">
+                        <p class="fw-semibold text-light mb-3">Share On</p>
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="#" id="shareFacebook"
+                                class="btn btn-outline-primary rounded-circle hw-social">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+
+                            <a href="#" id="shareTwitter"
+                                class="btn btn-outline-light rounded-circle hw-social">
+                                <i class="fab fa-x-twitter"></i>
+                            </a>
+
+                            <a href="#" id="shareWhatsApp"
+                                class="btn btn-outline-success rounded-circle hw-social">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+
+                            <a href="#" id="shareLinkedIn"
+                                class="btn btn-outline-info rounded-circle hw-social">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center pt-0">
+                    <small class="text-secondary">
+                        No login required • Permanent link
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <!-- Footer -->
-    <footer class="bg-primary text-white py-4 text-center">
+    <footer class="bg-primary text-white py-4 text-center mt-3">
         <div class="container">
             &copy; 2025 Online Code Compiler | Developed by Niaz SVD
         </div>
@@ -286,23 +501,71 @@
 
 
     <script>
-        var currentTheme = 'dracula'; // default theme
-        var themeIcon = document.querySelector('#themeToggle i');
+        var currentTheme = 'dark'; // default dark
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i'); // icon inside button
 
-        document.getElementById('themeToggle').addEventListener('click', function(e) {
+        themeToggle.addEventListener('click', function(e) {
             e.preventDefault();
-            if (currentTheme === 'dracula') {
-                currentTheme = 'default';
+
+            if (currentTheme === 'dark') {
+                currentTheme = 'light';
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
+
+                // CodeMirror light theme
+                editor.setOption('theme', 'default');
             } else {
-                currentTheme = 'dracula';
+                currentTheme = 'dark';
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
                 themeIcon.classList.remove('fa-sun');
                 themeIcon.classList.add('fa-moon');
+
+                // CodeMirror dark theme
+                editor.setOption('theme', 'dracula');
             }
 
-            editor.setOption('theme', currentTheme);
+            // Optional: adjust textarea/output colors (already using CSS variables)
+            const inputs = document.querySelectorAll('textarea, pre');
+            inputs.forEach(el => {
+                el.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--card-bg');
+                el.style.color = getComputedStyle(document.body).getPropertyValue('--card-text');
+                el.style.borderColor = currentTheme === 'dark' ? '#444' : '#ccc';
+            });
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // var currentTheme = 'dracula'; // default theme
+        // var themeIcon = document.querySelector('#themeToggle i');
+
+        // document.getElementById('themeToggle').addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     if (currentTheme === 'dracula') {
+        //         currentTheme = 'default';
+        //         themeIcon.classList.remove('fa-moon');
+        //         themeIcon.classList.add('fa-sun');
+        //     } else {
+        //         currentTheme = 'dracula';
+        //         themeIcon.classList.remove('fa-sun');
+        //         themeIcon.classList.add('fa-moon');
+        //     }
+
+        //     editor.setOption('theme', currentTheme);
+        // });
 
 
         var language = "{{ $language }}";
@@ -368,7 +631,7 @@
 
             var spinner = document.createElement('div');
             spinner.innerText = "Running...";
-            spinner.classList.add('text-black', 'fw-bold');
+            spinner.classList.add('text-custom-theme', 'fw-bold');
             output.appendChild(spinner);
 
             fetch("/run-code", {
@@ -405,6 +668,115 @@
                 });
         });
     </script>
+
+    @if (isset($sharedCode))
+        <script>
+            editor.setValue(@json($sharedCode->code));
+            document.getElementById('userInput').value = @json($sharedCode->stdin);
+        </script>
+    @endif
+
+    <script>
+        const shareBtn = document.getElementById('shareBtn');
+
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                fetch("{{ route('frontend.shareCode') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            language: language,
+                            code: editor.getValue(),
+                            stdin: document.getElementById('userInput').value
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        const link = data.url;
+
+                        // set input
+                        document.getElementById('shareLinkInput').value = link;
+
+                        // social urls
+                        document.getElementById('shareFacebook').href =
+                            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+
+                        document.getElementById('shareTwitter').href =
+                            `https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}`;
+
+                        document.getElementById('shareWhatsApp').href =
+                            `https://wa.me/?text=${encodeURIComponent(link)}`;
+
+                        document.getElementById('shareLinkedIn').href =
+                            `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`;
+
+                        // open modal
+                        new bootstrap.Modal(
+                            document.getElementById('shareModal')
+                        ).show();
+                    });
+            });
+        }
+
+        // copy button
+        document.getElementById('copyShareLink').addEventListener('click', function() {
+            const input = document.getElementById('shareLinkInput');
+            navigator.clipboard.writeText(input.value);
+
+            this.innerHTML = "Copied ✔";
+            this.classList.remove('btn-primary');
+            this.classList.add('btn-success');
+
+            setTimeout(() => {
+                this.innerHTML = "Copy";
+                this.classList.remove('btn-success');
+                this.classList.add('btn-primary');
+            }, 1500);
+        });
+    </script>
+
+    <script>
+        const clearBtn = document.getElementById('clearBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+
+                // clear output
+                const outputBox = document.getElementById('output');
+                if (outputBox) {
+                    outputBox.innerHTML = '';
+                }
+
+                // clear stdin
+                const inputBox = document.getElementById('userInput');
+                if (inputBox) {
+                    inputBox.value = '';
+                }
+            });
+        }
+    </script>
+
+
+
+    <script>
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const container = document.querySelector('.container-fluid');
+
+        fullscreenBtn.addEventListener('click', function() {
+            document.body.classList.toggle('fullscreen-mode');
+
+            if (document.body.classList.contains('fullscreen-mode')) {
+                fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i>';
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+            }
+        });
+    </script>
+
+
 
 </body>
 

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\SharedCode;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class FrontendController extends Controller
 {
@@ -96,5 +98,31 @@ class FrontendController extends Controller
         }
 
         return $data;
+    }
+
+
+    public function shareCode(Request $request)
+    {
+        $shared = SharedCode::create([
+            'token'    => Str::random(16),
+            'language' => $request->language,
+            'code'     => $request->code,
+            'stdin'    => $request->stdin
+        ]);
+
+        return response()->json([
+            'url' => route('frontend.openShared', $shared->token)
+        ]);
+    }
+
+    public function openShared($token)
+    {
+        $shared = SharedCode::where('token', $token)->firstOrFail();
+
+        return view('frontend.editor', [
+            'language'    => $shared->language,
+            'sharedCode' => $shared,
+            'fromShare'  => true
+        ]);
     }
 }
