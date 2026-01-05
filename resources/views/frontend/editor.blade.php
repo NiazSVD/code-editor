@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ ucfirst($language) }} Editor</title>
-
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Icons (Bootstrap Icons) -->
@@ -13,7 +12,6 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
@@ -21,6 +19,12 @@
     <style>
         body {
             background: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        html, body {
+            height: 100%;
         }
 
         .sidebar {
@@ -202,43 +206,7 @@
         </div>
     </nav>
 
-    <div class="d-flex">
-
-        <!--  Sidebar with Font Awesome Icons -->
-        {{-- <div class="sidebar d-flex flex-column align-items-center shadow">
-            <a href="{{ route('frontend.index') }}" title="Home"><i class="fa-solid fa-house"></i></a>
-
-            <!-- Language links -->
-            <a href="{{ route('frontend.editor', 'java') }}" title="Java"><i class="fa-brands fa-java"></i></a>
-            <a href="{{ route('frontend.editor', 'python') }}" title="Python"><i class="fa-brands fa-python"></i></a>
-            <a href="{{ route('frontend.editor', 'javascript') }}" title="JavaScript"><i
-                    class="fa-brands fa-js"></i></a>
-            <a href="{{ route('frontend.editor', 'php') }}" title="PHP"><i class="fa-brands fa-php"></i></a>
-            <a href="{{ route('frontend.editor', 'html') }}" title="HTML"><i class="fa-brands fa-html5"></i></a>
-            <a href="{{ route('frontend.editor', 'c') }}" title="C"><i class="fa-solid fa-c"></i></a>
-            <a href="{{ route('frontend.editor', 'cpp') }}" title="C++" class="text-decoration-none"><i
-                    class="fa-solid fa-c"></i>++</a>
-            <a href="{{ route('frontend.editor', 'csharp') }}" title="C#" class="text-decoration-none"><i
-                    class="fa-solid fa-c"></i>#</a>
-            <a href="{{ route('frontend.editor', 'go') }}" title="GO"><i class="fa-brands fa-golang"></i></a>
-            <a href="{{ route('frontend.editor', 'node') }}" title="Node.js"> <i class="fa-brands fa-node"></i> </a>
-
-            <a href="{{ route('frontend.editor', 'typescript') }}" title="TypeScript">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-typescript" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M14 0a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm-1.139 7.488q-.585 0-1.006.244a1.67 1.67 0 0 0-.634.674 2.1 2.1 0 0 0-.225.996q0 .753.293 1.182.303.42.967.732l.469.215q.438.186.625.43.185.244.185.635 0 .478-.166.703-.156.224-.527.224-.361.001-.547-.244-.186-.243-.205-.752h-1.162q.02.996.498 1.524.479.527 1.386.527.909 0 1.417-.518.507-.517.507-1.484 0-.81-.332-1.289t-1.045-.79l-.449-.196q-.39-.166-.556-.381-.166-.214-.166-.576 0-.4.165-.596.177-.195.508-.195.361 0 .508.234.156.234.176.703h1.123q-.03-.976-.498-1.484-.47-.518-1.309-.518M7 7.596v1.113h1.3V14.5h1.221V8.709h1.289V7.596z" />
-                </svg>
-            </a>
-
-            <a href="{{ route('frontend.editor', 'kotlin') }}" title="Kotlin"><i class="fa-solid fa-code"></i></a>
-            <a href="{{ route('frontend.editor', 'swift') }}" title="Swift"><i class="fa-brands fa-swift"></i></a>
-            <a href="{{ route('frontend.editor', 'dart') }}" title="Dart"><i class="fa-solid fa-code"></i></a>
-
-            <!-- Theme toggle -->
-            <a href="#" title="Theme"><i class="fa-solid fa-moon"></i></a>
-        </div> --}}
-
+    <div class="flex-grow-1 d-flex">
 
         @php
             $currentLang = $language ?? '';
@@ -325,12 +293,8 @@
 
         </div>
 
-
         <!-- Main Content -->
-
         <div class="container-fluid d-flex flex-column p-3">
-            {{-- <h4 class="mb-3 text-center">{{ ucfirst($language) }} Editor</h4> --}}
-
             <div class="row flex-grow-1 g-3 h-100">
                 <!-- Editor -->
                 <div class="col-md-7 d-flex flex-column h-100">
@@ -392,9 +356,6 @@
             </div>
         </div>
     </div>
-
-
-
 
     <!-- Dark Share Modal -->
     <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
@@ -461,7 +422,6 @@
         </div>
     </div>
 
-
     <!-- Footer -->
     <footer class="bg-primary text-white py-4 text-center mt-3">
         <div class="container">
@@ -474,7 +434,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- CodeMirror core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-
     <!-- Modes dependencies for HTMLMixed -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
     <!-- javascript -->
@@ -537,37 +496,6 @@
             });
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-        // var currentTheme = 'dracula'; // default theme
-        // var themeIcon = document.querySelector('#themeToggle i');
-
-        // document.getElementById('themeToggle').addEventListener('click', function(e) {
-        //     e.preventDefault();
-        //     if (currentTheme === 'dracula') {
-        //         currentTheme = 'default';
-        //         themeIcon.classList.remove('fa-moon');
-        //         themeIcon.classList.add('fa-sun');
-        //     } else {
-        //         currentTheme = 'dracula';
-        //         themeIcon.classList.remove('fa-sun');
-        //         themeIcon.classList.add('fa-moon');
-        //     }
-
-        //     editor.setOption('theme', currentTheme);
-        // });
-
-
         var language = "{{ $language }}";
 
         const modeMap = {
@@ -589,7 +517,6 @@
             go: 'go',
             rust: 'rust'
         };
-
 
         var userInput = document.getElementById('userInput');
 
@@ -619,7 +546,6 @@
             var output = document.getElementById('output');
             output.innerHTML = "";
 
-            // HTML preview
             if (language === 'html') {
                 var iframe = document.createElement('iframe');
                 iframe.style.width = "100%";
@@ -696,11 +622,8 @@
                     .then(res => res.json())
                     .then(data => {
                         const link = data.url;
-
-                        // set input
                         document.getElementById('shareLinkInput').value = link;
 
-                        // social urls
                         document.getElementById('shareFacebook').href =
                             `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
 
@@ -713,7 +636,6 @@
                         document.getElementById('shareLinkedIn').href =
                             `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`;
 
-                        // open modal
                         new bootstrap.Modal(
                             document.getElementById('shareModal')
                         ).show();
@@ -721,7 +643,6 @@
             });
         }
 
-        // copy button
         document.getElementById('copyShareLink').addEventListener('click', function() {
             const input = document.getElementById('shareLinkInput');
             navigator.clipboard.writeText(input.value);
@@ -742,14 +663,10 @@
         const clearBtn = document.getElementById('clearBtn');
         if (clearBtn) {
             clearBtn.addEventListener('click', function() {
-
-                // clear output
                 const outputBox = document.getElementById('output');
                 if (outputBox) {
                     outputBox.innerHTML = '';
                 }
-
-                // clear stdin
                 const inputBox = document.getElementById('userInput');
                 if (inputBox) {
                     inputBox.value = '';
@@ -757,8 +674,6 @@
             });
         }
     </script>
-
-
 
     <script>
         const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -775,7 +690,6 @@
             }
         });
     </script>
-
 
 
 </body>
